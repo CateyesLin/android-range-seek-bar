@@ -26,6 +26,9 @@
         <!-- the height of the bar -->
         <attr name="barHeight" format="dimension"/>
 
+        <!-- the active part height of the bar -->
+        <attr name="barActiveHeight" format="dimension"/>
+
         <!-- the color of the bar that is not selected -->
         <attr name="defaultColor" format="color"/>
 
@@ -34,6 +37,15 @@
 
         <!-- the color of the text above thumbs -->
         <attr name="textAboveThumbsColor" format="color"/>
+
+        <!-- the round bar -->
+        <attr name="barRoundCorner" format="boolean"/>
+
+        <!-- the min label -->
+        <attr name="minLabel" format="string|reference"/>
+
+        <!-- the max label -->
+        <attr name="maxLabel" format="string|reference"/>
 
         <!-- set drawables for thumb handles -->
         <attr name="thumbNormal" format="reference"/>
