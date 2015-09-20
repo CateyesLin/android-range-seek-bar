@@ -25,6 +25,82 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="New!! Custom bar height"/>
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            rsb:valuesAboveThumbs="true"
+            rsb:barHeight="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New!! Custom bar to round rect"/>
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            rsb:barHeight="8dp"
+            rsb:barRoundCorner="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New!! Custom bar active part height"/>
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            rsb:barHeight="3dp"
+            rsb:barActiveHeight="7dp"
+            rsb:barRoundCorner="true" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New!! Custom min lable and max label"/>
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            rsb:barHeight="8dp"
+            rsb:barRoundCorner="true"
+            rsb:minLabel="@string/small"
+            rsb:maxLabel="@string/big"/>
+
+        <!--<org.florescu.android.rangeseekbar.RangeSeekBar-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--rsb:textAboveThumbsColor="@android:color/holo_green_light"-->
+            <!--rsb:absoluteMinValue="0"-->
+            <!--rsb:absoluteMaxValue="100"-->
+            <!--rsb:valuesAboveThumbs="true"-->
+            <!--rsb:barHeight="7dp"-->
+            <!--rsb:barActiveHeight="3dp"-->
+            <!--rsb:alwaysActive="true"-->
+            <!--rsb:activeColor="@android:color/holo_green_dark" />-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Demo active bar"/>
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            rsb:textAboveThumbsColor="@android:color/holo_green_light"
+            rsb:absoluteMinValue="0"
+            rsb:absoluteMaxValue="100"
+            rsb:valuesAboveThumbs="true"
+            rsb:barHeight="2dp"
+            rsb:barActiveHeight="8dp"
+            rsb:alwaysActive="true"
+            rsb:activeColor="@android:color/holo_green_dark" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="Range seek bar from xml with default range"/>
 
         <org.florescu.android.rangeseekbar.RangeSeekBar

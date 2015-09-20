@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RangeSeekBar</string>
+    <string name="small">小</string>
+    <string name="big">大</string>
 </resources>

@@ -111,15 +111,20 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
     private boolean mIsDragging;
 
+    private String mMinLabel;
+    private String mMaxLabel;
+
     private int mTextOffset;
     private int mTextSize;
     private int mDistanceToTop;
     private RectF mRect;
+    private RectF mActiveRect;
 
     private boolean mSingleThumb;
     private boolean mAlwaysActive;
     private boolean mShowLabels;
     private boolean mShowTextAboveThumbs;
+    private boolean mBarRoundCorner;
     private float mInternalPad;
     private int mActiveColor;
     private int mDefaultColor;
@@ -165,7 +170,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        float barHeight;
+        int barHeight, barActiveHeight;
         int thumbNormal = R.drawable.seek_thumb_normal;
         int thumbPressed = R.drawable.seek_thumb_pressed;
         int thumbDisabled = R.drawable.seek_thumb_disabled;
@@ -179,10 +184,12 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             setRangeToDefaultValues();
             mInternalPad = PixelUtil.dpToPx(context, INITIAL_PADDING_IN_DP);
             barHeight = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
+            barActiveHeight = PixelUtil.dpToPx(context, LINE_HEIGHT_IN_DP);
             mActiveColor = ACTIVE_COLOR;
             mDefaultColor = Color.GRAY;
             mAlwaysActive = false;
             mShowTextAboveThumbs = true;
+            mBarRoundCorner = false;
             mTextAboveThumbsColor = Color.WHITE;
             thumbShadowColor = defaultShadowColor;
             mThumbShadowXOffset = defaultShadowXOffset;
@@ -196,14 +203,19 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                         extractNumericValueFromAttributes(a, R.styleable.RangeSeekBar_absoluteMaxValue, DEFAULT_MAXIMUM)
                 );
                 mShowTextAboveThumbs = a.getBoolean(R.styleable.RangeSeekBar_valuesAboveThumbs, true);
+                mBarRoundCorner = a.getBoolean(R.styleable.RangeSeekBar_barRoundCorner, false);
                 mTextAboveThumbsColor = a.getColor(R.styleable.RangeSeekBar_textAboveThumbsColor, Color.WHITE);
                 mSingleThumb = a.getBoolean(R.styleable.RangeSeekBar_singleThumb, false);
                 mShowLabels = a.getBoolean(R.styleable.RangeSeekBar_showLabels, true);
                 mInternalPad = a.getDimensionPixelSize(R.styleable.RangeSeekBar_internalPadding, INITIAL_PADDING_IN_DP);
                 barHeight = a.getDimensionPixelSize(R.styleable.RangeSeekBar_barHeight, LINE_HEIGHT_IN_DP);
+                barActiveHeight = a.getDimensionPixelSize(R.styleable.RangeSeekBar_barActiveHeight, barHeight);
                 mActiveColor = a.getColor(R.styleable.RangeSeekBar_activeColor, ACTIVE_COLOR);
                 mDefaultColor = a.getColor(R.styleable.RangeSeekBar_defaultColor, Color.GRAY);
                 mAlwaysActive = a.getBoolean(R.styleable.RangeSeekBar_alwaysActive, false);
+
+                mMinLabel = a.getString(R.styleable.RangeSeekBar_minLabel);
+                mMaxLabel = a.getString(R.styleable.RangeSeekBar_maxLabel);
 
                 Drawable normalDrawable = a.getDrawable(R.styleable.RangeSeekBar_thumbNormal);
                 if (normalDrawable != null) {
@@ -251,6 +263,11 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 mTextOffset + mThumbHalfHeight - barHeight / 2,
                 getWidth() - padding,
                 mTextOffset + mThumbHalfHeight + barHeight / 2);
+
+        mActiveRect = new RectF(padding,
+                mTextOffset + mThumbHalfHeight - barActiveHeight / 2,
+                getWidth() - padding,
+                mTextOffset + mThumbHalfHeight + barActiveHeight / 2);
 
         // make RangeSeekBar focusable. This solves focus handling issues in case EditText widgets are being used along with the RangeSeekBar within ScrollViews.
         setFocusable(true);
@@ -587,19 +604,26 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 
         if (mShowLabels) {
             // draw min and max labels
-            String minLabel = getContext().getString(R.string.demo_min_label);
-            String maxLabel = getContext().getString(R.string.demo_max_label);
-            minMaxLabelSize = Math.max(paint.measureText(minLabel), paint.measureText(maxLabel));
+//            String mMinLabel = getContext().getString(R.string.demo_min_label);
+//            String mMaxLabel = getContext().getString(R.string.demo_max_label);
+            mMinLabel = null == mMinLabel ? getContext().getString(R.string.demo_min_label) : mMinLabel;
+            mMaxLabel = null == mMaxLabel ? getContext().getString(R.string.demo_max_label) : mMaxLabel;
+            minMaxLabelSize = Math.max(paint.measureText(mMinLabel), paint.measureText(mMaxLabel));
             float minMaxHeight = mTextOffset + mThumbHalfHeight + mTextSize / 3;
-            canvas.drawText(minLabel, 0, minMaxHeight, paint);
-            canvas.drawText(maxLabel, getWidth() - minMaxLabelSize, minMaxHeight, paint);
+            canvas.drawText(mMinLabel, 0, minMaxHeight, paint);
+            canvas.drawText(mMaxLabel, getWidth() - minMaxLabelSize, minMaxHeight, paint);
         }
         padding = mInternalPad + minMaxLabelSize + mThumbHalfWidth;
 
         // draw seek bar background line
         mRect.left = padding;
         mRect.right = getWidth() - padding;
-        canvas.drawRect(mRect, paint);
+        if(mBarRoundCorner) {
+            canvas.drawRoundRect(mRect, mRect.height(), mRect.height(), paint);
+        } else {
+            canvas.drawRect(mRect, paint);
+        }
+
 
         boolean selectedValuesAreDefault = (getSelectedMinValue().equals(getAbsoluteMinValue()) &&
                 getSelectedMaxValue().equals(getAbsoluteMaxValue()));
@@ -609,11 +633,15 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 mActiveColor;   // non default, filter is active
 
         // draw seek bar active range line
-        mRect.left = normalizedToScreen(normalizedMinValue);
-        mRect.right = normalizedToScreen(normalizedMaxValue);
+        mActiveRect.left = normalizedToScreen(normalizedMinValue);
+        mActiveRect.right = normalizedToScreen(normalizedMaxValue);
 
         paint.setColor(colorToUseForButtonsAndHighlightedLine);
-        canvas.drawRect(mRect, paint);
+        if(mBarRoundCorner) {
+            canvas.drawRoundRect(mActiveRect, mActiveRect.height(), mActiveRect.height(), paint);
+        } else {
+            canvas.drawRect(mActiveRect, paint);
+        }
 
         // draw minimum thumb (& shadow if requested) if not a single thumb control
         if (!mSingleThumb) {
