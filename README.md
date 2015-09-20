@@ -8,6 +8,7 @@ If you are coming from [the original repo](https://github.com/yahoo/android-rang
 This library provides a SeekBar similar to the default Android one, but with two thumb controls allowing a range to be selected.
 
 ![](demo_screenshot.png)
+![](new-feature.png)
 
 # Features and customizations
 
@@ -25,6 +26,8 @@ Customizations:
   This makes it more similar to the default android seekbar, but you still benefit from the other features and very smooth animation.
 * Text above thumbs can be disabled and colour can be changed
 * Custom icons can be used for the thumbs
+* Custom bar height, bar active height and round rect bar
+* Custom min and max string
 
 # How to run demo
 
